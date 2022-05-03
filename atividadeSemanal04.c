@@ -15,10 +15,10 @@ int main(){
 	scanf("%f", &baseMenor);
 	
 	printf("\nDe um valor para a base maior do trapezio \n");
-	scanf("%f", baseMaior);
+	scanf("%f", &baseMaior);
 
 	printf("\nDe um valor para a altura do trapezio \n");
-	scanf("%f", altura);
+	scanf("%f", &altura);
 
 	areaTrapezio(baseMaior, baseMenor, altura);
 	return 0;

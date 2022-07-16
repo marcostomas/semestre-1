@@ -3,31 +3,24 @@
 
 int contaCaracteres(char** palavras, int n){
 	
-int nCaracteres, k = 0, ajuda = 1;
-
+	int nCaracteres, k = 0;
 	
 	for(int i = 0; i < n; i++)
 	{
-
-		while(ajuda)
+		while(palavras[i][k] != '\0')
 		{
-			if(&palavras[i][k] == "\0")
-			{
-				ajuda = 0;
-			}
-			else
-			{
-				nCaracteres++;
-				k++;
-			}
-			
+			nCaracteres++;
+			k++;
 		}
+		k = 0;
 	}
 	
 	return nCaracteres;
 
 }
-void main(){
+
+
+int main(){
 
 char** nomes2 = (char**) malloc(sizeof(char*)*4);
   nomes2[0] = (char*) malloc(sizeof(char)*10);
@@ -68,4 +61,5 @@ char** nomes2 = (char**) malloc(sizeof(char*)*4);
   nomes2[3][8] = '\0';
 
   printf("Total de caracteres: %i\n", contaCaracteres(nomes2,4));
+	return 0;
 }

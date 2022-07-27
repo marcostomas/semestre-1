@@ -77,6 +77,17 @@ Livro *novoLivro(char *nome, char *nAutorPrin, char *nOutrosAutores, char *empre
 }
 
 /********************** FUNCOES DOS alunos *********************************/
+// Teoricamente, essa função me retornará a primeira posição livre
+// Livro *retornaPosicaoLivre(*livro)
+// {
+// 	for (int i = 0; i < 150; i++)
+// 	{
+// 		if (livro[i] == NULL)
+// 		{
+// 			return &livro[i];
+// 		}
+// 	}
+// }
 
 /* Funcao para imprimir informacoes  sobre o livro l1 (passado como parametro)
 Veja na descricao do EP2 como essas informacoes devem ser impressas
@@ -95,7 +106,7 @@ void imprimirDados(Livro *l1)
 	}
 }
 
-int menorEl_NoEmprestimos(Livro *biblioteca, int tam, int inicio)
+int decrescente_NoEmprestimos(Biblioteca *biblioteca, int tam, int inicio)
 {
 	int i, posMenor;
 	posMenor = -1;
@@ -103,21 +114,21 @@ int menorEl_NoEmprestimos(Livro *biblioteca, int tam, int inicio)
 	{
 		posMenor = inicio;
 		for (i = inicio + 1; i < tam; i++)
-			if (biblioteca->noEmprestimos[i] > biblioteca->noEmprestimos[posMenor])
+			if (biblioteca->livros.noEmprestimos[i] > biblioteca->.livros.noEmprestimos[posMenor])
 				posMenor = i;
 	}
 	return (posMenor);
 }
 
-void OrdenacaoPorSelecaoEmprestimos(Livro *bib, int tam)
+void OrdenacaoPorSelecaoEmprestimos(Biblioteca *bib, int tam)
 {
 	int i, posMenor, aux;
 	for (i = 0; i < tam - 1; i++)
 	{
-		posMenor = menorEl_NoEmprestimos(bib, tam, i);
-		aux = bib[i];
-		bib[i] = bib[posMenor];
-		bib[posMenor] = aux;
+		posMenor = decrescente_NoEmprestimos(bib, tam, i);
+		aux = bib->livros[i];
+		bib->livros[i] = bib->livros[posMenor];
+		bib->livros[posMenor] = aux;
 	}
 }
 
@@ -165,16 +176,19 @@ void ordenaBibliotecaNomeLivro(Biblioteca *bib)
 	OrdenacaoPorSelecaoNome(bib, 150);
 }
 
-// O que vem antes desse comentário já está feito. Falta testar! A fazer:
-
 /*
 A funcao abaixo busca um livro na biblioteca pelo nome do livro. Ela retorna
 o ponteiro para o livro, se existir, e NULL, se nao existir, na biblioteca.
 */
 Livro *buscaLivro(Biblioteca *bib, char *nNomeLivro)
 {
-	/* Insira seu codigo aqui! */
-	return NULL; // Codigo inserido so para permitir a compilacao desse template.
+	for (int i = 0; i < 150; i++)
+	{
+		if (bib->livros[i]->nome == nNomeLivro)
+			return &bib->livros[i];
+		else
+			return NULL;
+	}
 }
 
 /*
@@ -185,7 +199,33 @@ descricao do EP2 para tratar essa situacao.
 */
 void insereLivro(Biblioteca *bib, Livro *l)
 {
-	/* Insira seu codigo aqui! */
+	if (bib->posLivre > (TAM - 1))
+	{
+		OrdenacaoPorSelecaoEmprestimos(bib, TAM);
+		if (int i = TAM - 1; i < 0; i--)
+		{
+			if (bib->livros.emprestado[i])
+			{
+				continue;
+			}
+			else
+			{
+				bib->livros[i] = l;
+			}
+		}
+	}
+	else
+	{
+		for (int i = 0; i < TAM; i++)
+		{
+			if (bib->livros[i] == NULL)
+			{
+				bib->livros[i] = l;
+				bib->posLivre++;
+				break;
+			}
+		}
+	}
 }
 
 /*
@@ -197,8 +237,26 @@ emprestado deve ser igual a true e seu campo noEmprestimos deve ser incrementado
 */
 Livro *emprestaLivro(Biblioteca *bib, char *nNomeLivro, char *nEmprestador)
 {
-	/* Insira seu codigo aqui! */
-	return NULL; // Codigo inserido so para permitir a compilacao desse template.
+	Livro *endereco = buscaLivro(bib, nNomeLivro);
+
+	if (endereco != NULL)
+	{
+		if (endereco->emprestado)
+		{
+			return NULL;
+		}
+		else
+		{
+			endereco->emprestado = true;
+			endereco->noEmprestimos = endereco->noEmprestimos + 1;
+			endereco->nomeDoEmprestador = nEmprestador;
+			return endereco;
+		}
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /*
@@ -210,20 +268,28 @@ valor do campo  noEmprestimos.
 */
 Livro *devolveLivro(Biblioteca *bib, char *nNomeLivro)
 {
-	/* Insira seu codigo aqui! */
-
-	return NULL; // Codigo inserido so para permitir a compilacao desse template.
+	Livro *endereco = buscaLivro(bib, nNomeLivro);
+	if (endereco != NULL)
+	{
+		endereco->nomeDoEmprestador = "";
+		endereco->emprestado = false;
+		return endereco;
+	}
+	else
+	{
+		return NULL;
+	}
 }
 
 /*
- Esta funcao devolve o numero de livros na biblioteca
+ Esta funcao devolve o numero de livros na biblioteca. NA MINHA CABEÇA ISSO FUNCIONA
 */
 int tamanho(Biblioteca *bib)
 {
-	return 0; // Codigo inserido so para permitir a compilacao desse template.
+	int nLivros = bib->posLivre;
+	return nLivros;
 }
 
-// O que vem depois desse comentário já está feito. Falta testar!
 /*
 Esta funcao imprime o conteudo da biblioteca ordenada por numero de noEmprestimos
 de cada livro. Os mais emprestados primeiro.
@@ -254,6 +320,270 @@ void imprimirBibliotecaOrdenadaNomeLivro(Biblioteca *bib)
 
 int main()
 {
-	Biblioteca *bib = (Biblioteca *)malloc(sizeof(Livro)); //"Instanciando" biblioteca
+	int i;
+	int noErros = 0;
+	Livro *l1, *l2, *l3, *l4, *l5, *l6, *l7;
+	printf("ATENCAO: Nem todas as caracteristicas do enunciado sao testadas neste exemplo.\n");
+	printf("         Cabe a cada aluno(a) testar cuidadosamente seu EP.\n\n");
+
+	printf("*** Criando Biblioteca **************************************\n");
+	Biblioteca biblioteca;
+	biblioteca.posLivre = 0; // Nao se esqueca de iniciar o campo posLivre com zero!
+
+	// Fazendo apontar os elementos do array biblioteca.livros para NULL
+
+	for (i = 0; i < TAM; ++i)
+		biblioteca.livros[i] = NULL;
+
+	printf("==> Teste insercao de livros:\n");
+	l1 = novoLivro("The great gatsby", "Scott Fitzgerald", "Mathew j. Bruccoli", "", LITERATURA, "Collier books", 1991);
+	insereLivro(&biblioteca, l1);
+
+	if (!(l1 != NULL && strcmp(l1->nome, "The great gatsby") == 0 &&
+		  strcmp(l1->primeiro_autor, "Scott Fitzgerald") == 0 &&
+		  strcmp(l1->demais_autores, "Mathew j. Bruccoli") == 0 &&
+		  l1->area == LITERATURA &&
+		  strcmp(l1->editora, "Collier books") == 0 &&
+		  l1->anopub == 1991 &&
+		  l1->emprestado == false))
+	{
+		printf("==> Erro: Insercao de livro com problema\n");
+		imprimirDados(l1);
+		noErros++;
+	}
+
+	l1 = novoLivro("No Caminho de Swann", "Marcel Proust", "", "", LITERATURA, "Ediouro", 1993);
+
+	if (!(l1 != NULL && strcmp(l1->nome, "No Caminho de Swann") == 0 &&
+		  strcmp(l1->primeiro_autor, "Marcel Proust") == 0 &&
+		  strcmp(l1->demais_autores, "") == 0 &&
+		  l1->area == LITERATURA &&
+		  strcmp(l1->editora, "Ediouro") == 0 &&
+		  l1->anopub == 1993 &&
+		  l1->emprestado == false))
+	{
+		printf("==> Erro: Insercao de livro com problema\n");
+		imprimirDados(l1);
+		noErros++;
+	}
+
+	l2 = novoLivro("À Sobra das Moças em Flor", "Marcel Proust", "", "", LITERATURA, "Ediouro", 1993);
+	l3 = novoLivro("O Caminho de Guermantes", "Marcel Proust", "", "", LITERATURA, "Ediouro", 1993);
+	l4 = novoLivro("Sodoma e Gomorra", "Marcel Proust", "", "", LITERATURA, "Ediouro", 1993);
+	l5 = novoLivro("A Prisioneira", "Marcel Proust", "", "", LITERATURA, "Ediouro", 1993);
+	l6 = novoLivro("Albertine Desaparecida", "Marcel Proust", "", "", LITERATURA, "Ediouro", 1993);
+	l7 = novoLivro("O Tempo Reencontrado", "Marcel Proust", "", "", LITERATURA, "Ediouro", 1993);
+
+	insereLivro(&biblioteca, l1);
+	insereLivro(&biblioteca, l2);
+	insereLivro(&biblioteca, l3);
+	insereLivro(&biblioteca, l4);
+	insereLivro(&biblioteca, l5);
+	insereLivro(&biblioteca, l6);
+	insereLivro(&biblioteca, l7);
+
+	l1 = novoLivro("O mundo assombrado pelos demonios", "Carl Sagan", "", "", CIENCIAS, "Companhia da Letras", 1995);
+	insereLivro(&biblioteca, l1);
+	l1 = novoLivro("Armas, germes...", "Jared Diamond", "", "", CIENCIAS, "Record", 1997);
+	insereLivro(&biblioteca, l1);
+	l1 = novoLivro("O codigo da vinci", "Dan Brown", "", "", CIENCIAS, "Sextante", 2004);
+	insereLivro(&biblioteca, l1);
+	l1 = novoLivro("A noite escura e mais eu", "Lygia Fagundes Telles", "", "", LITERATURA, "Nova Fronteira", 1995);
+	insereLivro(&biblioteca, l1);
+	l1 = novoLivro("Guerra e Paz", "Leon Tolstoy", "", "", LITERATURA, "Ediouro", 1993);
+	insereLivro(&biblioteca, l1);
+	l1 = novoLivro("O apanhador no campo de centeio", "Jerome David Salinger", "", "", LITERATURA, "Editora do Autor", 1945);
+	insereLivro(&biblioteca, l1);
+
+	printf("==> Teste tamanho biblioteca\n");
+
+	if (tamanho(&biblioteca) != 14)
+	{
+		printf("==> Erro: no tamanho da biblioteca\n");
+		noErros++;
+	}
+
+	printf("==> Teste busca de livro inexistente no acervo\n");
+
+	l1 = buscaLivro(&biblioteca, "The code breaker");
+	if (l1 != NULL)
+	{
+		printf("==> Erro: busca de livro inexistente com problema\n");
+		noErros++;
+	}
+	printf("==> Teste busca de livro existente no acervo\n");
+
+	l1 = buscaLivro(&biblioteca, "A noite escura e mais eu");
+
+	if (l1 != NULL)
+	{
+		if (strcmp(l1->nome, "A noite escura e mais eu"))
+		{
+			printf("==> Erro: busca de livro existente com problema\n");
+			noErros++;
+		}
+	}
+	else
+	{
+		printf("==> Erro: busca de livro existente com problema\n");
+		noErros++;
+	}
+
+	printf("==> Teste emprestimo de livro do acervo\n");
+	l1 = emprestaLivro(&biblioteca, "O Tempo Reencontrado", "John Le Carre");
+
+	if (l1 != NULL)
+	{
+		if (strcmp(l1->nomeDoEmprestador, "John Le Carre") || l1->emprestado == false)
+		{
+			printf("==> Erro: emprestimo de livro existente com problema\n");
+			noErros++;
+		}
+	}
+	else
+	{
+		printf("==> Erro: nao encontrei o livro a ser emprestado\n");
+		noErros++;
+	}
+
+	printf("==> Teste devolucao de livro acervo\n");
+
+	l1 = devolveLivro(&biblioteca, "O Tempo Reencontrado");
+
+	if (l1 != NULL)
+	{
+		if (strcmp(l1->nomeDoEmprestador, "") || l1->emprestado == true || l1->noEmprestimos <= 0)
+		{
+			printf("==> Erro: devolucao de livro existente com problema\n");
+			noErros++;
+		}
+	}
+	else
+	{
+		printf("==> Erro: nao encontrei o livro a ser devolvido\n");
+		noErros++;
+	}
+
+	l1 = devolveLivro(&biblioteca, "Fake book");
+	if (l1 != NULL)
+	{
+		printf("==> Erro:  encontrei um livro que não foi existe na biblioteca, logo nao pode ser devolvido\n");
+		noErros++;
+	}
+
+	// Teste relatorios
+
+	printf("==> Teste ordenacao acervo\n");
+
+	ordenaBibliotecaNomeLivro(&biblioteca);
+	printf("===> Ordenado por nome do livro:\n");
+
+	l1 = biblioteca.livros[0]; // Peguei o primeiro elemento da biblioteca ordenada por Nome do Livro
+
+	imprimirDados(l1);
+
+	if (!(l1 != NULL &&
+		  strcmp(l1->nome, "A Prisioneira") == 0 &&
+		  strcmp(l1->primeiro_autor, "Marcel Proust") == 0 &&
+		  strcmp(l1->demais_autores, "") == 0 &&
+		  l1->area == LITERATURA &&
+		  strcmp(l1->editora, "Ediouro") == 0 &&
+		  l1->anopub == 1993 &&
+		  l1->emprestado == false))
+	{
+		printf("==> Erro: Ordenacao por nome de livro com problema\n");
+		noErros++;
+	}
+
+	l1 = biblioteca.livros[1]; // Peguei o segundo elemento da biblioteca ordenada por Nome do Livro
+	imprimirDados(l1);
+	if (!(l1 != NULL &&
+		  strcmp(l1->nome, "A noite escura e mais eu") == 0 &&
+		  strcmp(l1->primeiro_autor, "Lygia Fagundes Telles") == 0 &&
+		  strcmp(l1->demais_autores, "") == 0 &&
+		  l1->area == LITERATURA &&
+		  strcmp(l1->editora, "Nova Fronteira") == 0 &&
+		  l1->anopub == 1995 &&
+		  l1->emprestado == false))
+	{
+		printf("==> Erro: Ordenacao por nome de livro com problema\n");
+		noErros++;
+	}
+
+	printf("===> Ordenado por frequencia:\n");
+	emprestaLivro(&biblioteca, "O Tempo Reencontrado", "Gabi Gol");
+	emprestaLivro(&biblioteca, "O apanhador no campo de centeio", "Felipe Coutinho");
+
+	if (!(l1 != NULL && strcmp(l1->nome, "O Tempo Reencontrado") == 0 &&
+		  strcmp(l1->primeiro_autor, "Marcel Proust") == 0 &&
+		  strcmp(l1->demais_autores, "") == 0 &&
+		  l1->area == LITERATURA &&
+		  strcmp(l1->editora, "Ediouro") == 0 &&
+		  l1->anopub == 1993 &&
+		  l1->emprestado == true))
+	{
+		printf("==> Erro: Ordenacao por frequencia com problema\n");
+		noErros++;
+	}
+
+	l1 = biblioteca.livros[1]; // Peguei o segundo elemento da biblioteca ordenada por Nome do Livro
+
+	if (!(l1 != NULL && strcmp(l1->nome, "O apanhador no campo de centeio") == 0 &&
+		  strcmp(l1->primeiro_autor, "Jerome David Salinger") == 0 &&
+		  strcmp(l1->demais_autores, "") == 0 &&
+		  l1->area == LITERATURA &&
+		  strcmp(l1->editora, "Editora do Autor") == 0 &&
+		  l1->anopub == 1945 &&
+		  l1->emprestado == true))
+	{
+		printf("==> Erro: Ordenacao por frequencia com problema\n");
+		noErros++;
+	}
+
+	// printf("==> Teste imprime ordenado por frequencia\n");
+	// imprimeBibliotecaPorNumeroEmprestimos(&biblioteca);
+	// printf("==> Teste imprime ordenado por nome de livro\n");
+	// imprimirBibliotecaOrdenadaNomeLivro(&biblioteca);
+
+	printf("==> Teste da biblioteca lotada\n");
+	int espacolivre = TAM - tamanho(&biblioteca); // Espaço livre na biblioteca nesse momento.
+
+	for (i = 0; i < espacolivre; ++i)
+	{
+		char nomelivro[TAMNOMES];
+		// sprintf funciona como o printf, so que escreve em um string de caracteres, no caso, nomelivro.
+		// Usei-o para criar varios nomes diferentes de livros acrescentando um inteiro no final.
+		// Mas cuidado com sprinf! O que você vai escrever em nomelivro nao pode ser maior que o
+		// tamanho do string, no caso TAMNOMES.
+		sprintf(nomelivro, "Zlivro-%d", i);
+		l1 = novoLivro(nomelivro, "Zautor", "", "", ARTES, "Editora do Autor", 1945);
+		insereLivro(&biblioteca, l1);
+	}
+
+	if (tamanho(&biblioteca) != TAM)
+	{
+		printf("==> Erro: lotacao total da biblioteca com problema\n");
+		noErros++;
+	}
+
+	printf("===> Teste insercao de novo livro:\n");
+	l1 = novoLivro("Zlivro-1000", "Zautor", "", "", ARTES, "Editora do Autor", 1945);
+	insereLivro(&biblioteca, l1);
+
+	l1 = buscaLivro(&biblioteca, "Zlivro-1000");
+
+	l2 = buscaLivro(&biblioteca, "O Tempo Reencontrado");
+
+	l3 = buscaLivro(&biblioteca, "O apanhador no campo de centeio");
+
+	// Tamanho tem que continuar o mesmo (==TAM), os livros que com maior frequencia de emprestismo tem que ficar
+	// biblioteca e Zlivro-1000 tem que fazer parte da biblioteca agora.
+	if (tamanho(&biblioteca) != TAM || l1 == NULL || l2 == NULL || l3 == NULL)
+	{
+		printf("==> Erro: insercao na biblioteca biblioteca lotada com problema\n");
+		noErros++;
+	}
+
+	printf("Numero de erros: %d\n", noErros);
 	return 0;
 }

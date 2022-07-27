@@ -114,7 +114,7 @@ int decrescente_NoEmprestimos(Biblioteca *biblioteca, int tam, int inicio)
 	{
 		posMenor = inicio;
 		for (i = inicio + 1; i < tam; i++)
-			if (biblioteca->livros.noEmprestimos[i] > biblioteca->.livros.noEmprestimos[posMenor])
+			if (biblioteca->livros[i]->noEmprestimos > biblioteca->livros[posMenor]->noEmprestimos)
 				posMenor = i;
 	}
 	return (posMenor);
@@ -122,7 +122,8 @@ int decrescente_NoEmprestimos(Biblioteca *biblioteca, int tam, int inicio)
 
 void OrdenacaoPorSelecaoEmprestimos(Biblioteca *bib, int tam)
 {
-	int i, posMenor, aux;
+	int i, posMenor;
+	Livro *aux;
 	for (i = 0; i < tam - 1; i++)
 	{
 		posMenor = decrescente_NoEmprestimos(bib, tam, i);
@@ -141,7 +142,7 @@ void ordenaBibliotecaPorNumeroEmprestimos(Biblioteca *bib)
 	OrdenacaoPorSelecaoEmprestimos(bib, 150);
 }
 
-int menorEl_Nome(Livro *biblioteca, int tam, int inicio)
+int menorEl_Nome(Biblioteca *bib, int tam, int inicio)
 {
 	int i, posMenor;
 	posMenor = -1;
@@ -149,21 +150,22 @@ int menorEl_Nome(Livro *biblioteca, int tam, int inicio)
 	{
 		posMenor = inicio;
 		for (i = inicio + 1; i < tam; i++)
-			if (biblioteca->nome[i] < biblioteca->nome[posMenor])
+			if (bib->livros[i]->nome < bib->livros[posMenor]->nome)
 				posMenor = i;
 	}
 	return (posMenor);
 }
 
-void OrdenacaoPorSelecaoNome(Livro *bib, int tam)
+void OrdenacaoPorSelecaoNome(Biblioteca *bib, int tam)
 {
-	int i, posMenor, aux;
+	int i, posMenor;
+	Livro *aux;
 	for (i = 0; i < tam - 1; i++)
 	{
 		posMenor = menorEl_Nome(bib, tam, i);
-		aux = bib[i];
-		bib[i] = bib[posMenor];
-		bib[posMenor] = aux;
+		aux = bib->livros[i];
+		bib->livros[i] = bib->livros[posMenor];
+		bib->livros[posMenor] = aux;
 	}
 }
 
@@ -185,7 +187,7 @@ Livro *buscaLivro(Biblioteca *bib, char *nNomeLivro)
 	for (int i = 0; i < 150; i++)
 	{
 		if (bib->livros[i]->nome == nNomeLivro)
-			return &bib->livros[i];
+			return bib->livros[i];
 		else
 			return NULL;
 	}
@@ -202,16 +204,10 @@ void insereLivro(Biblioteca *bib, Livro *l)
 	if (bib->posLivre > (TAM - 1))
 	{
 		OrdenacaoPorSelecaoEmprestimos(bib, TAM);
-		if (int i = TAM - 1; i < 0; i--)
+		for (int i = TAM - 1; i < 0; i--)
 		{
-			if (bib->livros.emprestado[i])
-			{
-				continue;
-			}
-			else
-			{
+			if (bib->livros[i]->emprestado != true)
 				bib->livros[i] = l;
-			}
 		}
 	}
 	else
@@ -249,7 +245,7 @@ Livro *emprestaLivro(Biblioteca *bib, char *nNomeLivro, char *nEmprestador)
 		{
 			endereco->emprestado = true;
 			endereco->noEmprestimos = endereco->noEmprestimos + 1;
-			endereco->nomeDoEmprestador = nEmprestador;
+			strcpy(endereco->nomeDoEmprestador, nEmprestador);
 			return endereco;
 		}
 	}
@@ -271,7 +267,7 @@ Livro *devolveLivro(Biblioteca *bib, char *nNomeLivro)
 	Livro *endereco = buscaLivro(bib, nNomeLivro);
 	if (endereco != NULL)
 	{
-		endereco->nomeDoEmprestador = "";
+		strcpy(endereco->nomeDoEmprestador, "");
 		endereco->emprestado = false;
 		return endereco;
 	}
@@ -300,7 +296,7 @@ void imprimeBibliotecaPorNumeroEmprestimos(Biblioteca *bib)
 	ordenaBibliotecaPorNumeroEmprestimos(bib);
 	for (i = 0; i < 150; i++)
 	{
-		imprimirDados(bib[i]);
+		imprimirDados(bib->livros[i]);
 	}
 }
 
@@ -312,9 +308,9 @@ void imprimirBibliotecaOrdenadaNomeLivro(Biblioteca *bib)
 {
 	int i;
 	ordenaBibliotecaNomeLivro(bib);
-	for (i = 0; i < 150; i++)
+	for (i = 0; i < TAM; i++)
 	{
-		imprimirDados(bib[i]);
+		imprimirDados(bib->livros[i]);
 	}
 }
 
@@ -460,7 +456,7 @@ int main()
 	}
 	else
 	{
-		printf("==> Erro: nao encontrei o livro a ser devolvido\n");
+		printf("==> Erro: nao encontrei o livro a ser devolvido -- Testando\n");
 		noErros++;
 	}
 

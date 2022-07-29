@@ -48,7 +48,7 @@ void separaNumero(int valor)
 		centenas = (valor / 100) % 10;
 		milhares = (valor / 1000) % 10;
 
-		printf("milhar: %i, centena: %i, dezena: %i, unidade: %i", milhares, centenas, dezenas, unidades);
+		printf("milhar: %i, centena: %i, dezena: %i, unidade: %i \n\n", milhares, centenas, dezenas, unidades);
 	}
 	else
 	{
@@ -57,7 +57,7 @@ void separaNumero(int valor)
 		centenas = -1;
 		milhares = -1;
 
-		printf("milhar: %i, centena: %i, dezena: %i, unidade: %i", milhares, centenas, dezenas, unidades);
+		printf("milhar: %i, centena: %i, dezena: %i, unidade: %i \n\n", milhares, centenas, dezenas, unidades);
 	}
 }
 
@@ -82,7 +82,7 @@ int ultrapassagem(int popA, double taxaA, int popB, double taxaB)
 
 	if ((popA <= 0) || (popB <= 0) || (taxaA <= 0) || (taxaB <= 0))
 	{
-		printf("Tal operacao nao e possivel.");
+		printf("Tal operacao nao e possivel. \n\n");
 		return -1;
 	}
 	else
@@ -95,11 +95,10 @@ int ultrapassagem(int popA, double taxaA, int popB, double taxaB)
 
 			if (anos > 32000)
 			{
-				printf("Nao ultrapassou");
+				printf("Nao ultrapassou \n\n");
 				return -1;
 			}
 		}
-		printf("Taxa A: %.2f; Populacao A: %i; Taxa B: %.2f; Populacao B: %i; Anos: %i\n\n", taxaA, popA, taxaB, popB, anos);
 		return anos;
 	}
 }
@@ -161,7 +160,6 @@ int somaprimosdegermain(int inicio, int fim, int passo)
 			contador += passo;
 		}
 	}
-	printf("Inicio: %i; Fim: %i; Passo: %i; Resultado: %i \n\n", inicio, fim, passo, soma);
 	return soma;
 }
 int primo(int n)
@@ -226,7 +224,6 @@ double somasequencia(long n)
 			soma = soma + pow(-1, i + 1) / i;
 			i++;
 		}
-		printf("Soma da sequencia para n = %ld: %f \n\n", n, soma);
 		return soma;
 	}
 }
@@ -258,41 +255,169 @@ long fatorial(int n)
 			fatorial *= contador;
 		}
 
-		printf("Valor de n: %i; Resultado: %li\n\n", n, fatorial);
+		return fatorial;
 	}
 }
 
+/*
+	função main criada apenas para seus testes.
+	Voce pode adicionar novos testes se quiser.
+	ESTA função SERA IGNORADA NA CORRECAO
+*/
 int main()
 {
-	separaNumero(2345);
-	separaNumero(606);
-	separaNumero(-1);
-	ultrapassagem(37000, 2, 400000, 1.5); // Alcança
-	ultrapassagem(37000, 2, 37000, 1.5);  // Observar
-	ultrapassagem(37000, 2, 400000, 1);	  // Alcança
-	ultrapassagem(37000, 0.2, 400000, 1); // Não Alcaça
-	ultrapassagem(37000, 2, 400000, -1);  // Alcaça
-	somaprimosdegermain(0, 10, 1);
-	somaprimosdegermain(1, 30, 1);
-	somasequencia(5);
-	somasequencia(50);
-	somasequencia(1000);
-	somasequencia(25000);
-	somasequencia(32000);
-	somasequencia(32000000);
-	fatorial(-1);
-	fatorial(0);
-	fatorial(1);
-	fatorial(2);
-	fatorial(3);
-	fatorial(4);
-	fatorial(5);
-	fatorial(6);
-	fatorial(7);
-	fatorial(10);
-	fatorial(50);
-	printf("\n\n\n\n TERMINOU \n\n\n\n\n\n");
+
+	/* Exemplos de testes para a função separaNumero: */
+	int valor;
+
+	valor = 2345;
+	separaNumero(valor);
+	printf("Valor: %i\n", valor);
+	printf("Milhares: %i\n", milhares);
+	printf("Centenas: %i\n", centenas);
+	printf("Dezenas : %i\n", dezenas);
+	printf("Unidades: %i\n", unidades);
+	printf("\n");
+
+	valor = 606;
+	separaNumero(valor);
+	printf("Valor: %i\n", valor);
+	printf("Milhares: %i\n", milhares);
+	printf("Centenas: %i\n", centenas);
+	printf("Dezenas : %i\n", dezenas);
+	printf("Unidades: %i\n", unidades);
+	printf("\n");
+
+	valor = -1;
+	separaNumero(valor);
+	printf("Valor: %i\n", valor);
+	printf("Milhares: %i\n", milhares);
+	printf("Centenas: %i\n", centenas);
+	printf("Dezenas : %i\n", dezenas);
+	printf("Unidades: %i\n", unidades);
+	printf("\n");
+
+	/* Exemplos de testes para a função ultrapassagem: */
+	double taxaA, taxaB;
+	int popA, popB;
+
+	taxaA = 2; // % de crescimento
+	taxaB = 1.5;
+
+	popA = 37000;
+	popB = 400000;
+
+	printf("Taxa A: %.2f; Populacao A: %i; Taxa B: %.2f; Populacao B: %i; Anos: %i\n\n", taxaA, popA,
+		   taxaB, popB, ultrapassagem(popA, taxaA, popB, taxaB));
+
+	taxaA = 2; // % de crescimento
+	taxaB = 1.5;
+
+	popA = 37000;
+	popB = 37000;
+
+	printf("Taxa A: %.2f; Populacao A: %i; Taxa B: %.2f; Populacao B: %i; Anos: %i\n\n", taxaA, popA,
+		   taxaB, popB, ultrapassagem(popA, taxaA, popB, taxaB));
+
+	taxaA = 2; // % de crescimento
+	taxaB = 1.0;
+
+	popA = 37000;
+	popB = 400000;
+
+	printf("Taxa A: %.2f; Populacao A: %i; Taxa B: %.2f; Populacao B: %i; Anos: %i\n\n", taxaA, popA,
+		   taxaB, popB, ultrapassagem(popA, taxaA, popB, taxaB));
+
+	taxaA = 0.2; // % de crescimento
+	taxaB = 1.0;
+
+	popA = 37000;
+	popB = 400000;
+
+	printf("Taxa A: %.2f; Populacao A: %i; Taxa B: %.2f; Populacao B: %i; Anos: %i\n\n", taxaA, popA,
+		   taxaB, popB, ultrapassagem(popA, taxaA, popB, taxaB));
+
+	taxaA = 2; // % de crescimento
+	taxaB = -1.0;
+
+	popA = 37000;
+	popB = 400000;
+
+	printf("Taxa A: %.2f; Populacao A: %i; Taxa B: %.2f; Populacao B: %i; Anos: %i\n\n", taxaA, popA,
+		   taxaB, popB, ultrapassagem(popA, taxaA, popB, taxaB));
+
+	/* Exemplos de testes para a função somaprimosdegermain: */
+	int inicio;
+	int fim;
+	int passo;
+
+	inicio = 0;
+	fim = 10;
+	passo = 1;
+	printf("Inicio: %i; Fim: %i; Passo: %i; Resultado: %i\n\n", inicio, fim, passo, somaprimosdegermain(inicio, fim, passo));
+
+	inicio = 1;
+	fim = 30;
+	passo = 1;
+	printf("Inicio: %i; Fim: %i; Passo: %i; Resultado: %i\n\n", inicio, fim, passo, somaprimosdegermain(inicio, fim, passo));
+
+	/* Exemplos de testes para a função somasequencia:  */
+	long n = 5;
+
+	printf("Soma da sequencia para n=%ld: %f\n\n", n, somasequencia(n));
+
+	n = 50;
+	printf("Soma da sequencia para n=%ld: %f\n\n", n, somasequencia(n));
+
+	n = 1000;
+	printf("Soma da sequencia para n=%ld: %f\n\n", n, somasequencia(n));
+
+	n = 25000;
+	printf("Soma da sequencia para n=%ld: %f\n\n", n, somasequencia(n));
+
+	n = 32000;
+	printf("Soma da sequencia para n=%ld: %f\n\n", n, somasequencia(n));
+
+	n = 32000000;
+	printf("Soma da sequencia para n=%ld: %f\n\n", n, somasequencia(n));
+
+	/* Exemplos de testes para a função fatorial: */
+	int valorDeN;
+
+	valorDeN = -1;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 0;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 1;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 2;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 3;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 4;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 5;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 6;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 7;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 10;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	valorDeN = 50;
+	printf("Valor de n: %i; Resultado: %li\n\n", valorDeN, fatorial(valorDeN));
+
+	/* se desejar, escreva seu codigo (para testes) aqui */
+
 	return 0;
 }
-
-* /

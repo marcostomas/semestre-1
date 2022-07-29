@@ -77,24 +77,18 @@ Livro *novoLivro(char *nome, char *nAutorPrin, char *nOutrosAutores, char *empre
 }
 
 /********************** FUNCOES DOS alunos *********************************/
-// Teoricamente, essa função me retornará a primeira posição livre
-// Livro *retornaPosicaoLivre(*livro)
-// {
-// 	for (int i = 0; i < 150; i++)
-// 	{
-// 		if (livro[i] == NULL)
-// 		{
-// 			return &livro[i];
-// 		}
-// 	}
-// }
-
 /* Funcao para imprimir informacoes  sobre o livro l1 (passado como parametro)
 Veja na descricao do EP2 como essas informacoes devem ser impressas
 */
 void imprimirDados(Livro *l1)
 {
-	printf("Nome: %s \nAutor: %s \nAutores Secundarios: %s \nEditora: %s \nArea: %s \nAno Publicacao: %i \nNumero de Emprestimos: %i \n", l1->nome, l1->primeiro_autor, l1->demais_autores, l1->editora, l1->area, l1->anopub, l1->noEmprestimos);
+	printf("Nome: %s \n", l1->nome);
+	printf("Autor: %s \n", l1->primeiro_autor);
+	printf("Autores Secundarios: %s \n", l1->demais_autores);
+	printf("Editora: %s \n", l1->editora);
+	printf("Area: %s \n", l1->area);
+	printf("Ano publicacao: %i \n", l1->anopub);
+	printf("Numero de emprestimos: %i \n", l1->noEmprestimos);
 
 	if (l1->emprestado)
 	{
@@ -184,12 +178,16 @@ o ponteiro para o livro, se existir, e NULL, se nao existir, na biblioteca.
 */
 Livro *buscaLivro(Biblioteca *bib, char *nNomeLivro)
 {
-	for (int i = 0; i < 150; i++)
+	for (int i = 0; i < TAM; i++)
 	{
-		if (bib->livros[i]->nome == nNomeLivro)
-			return bib->livros[i];
-		else
+		if (i >= bib->posLivre)
 			return NULL;
+
+		printf("Nome do Livro - Biblioteca: %s\n", bib->livros[i]->nome);
+		printf("Nome do Livro - Buscado: %s\n\n", nNomeLivro);
+
+		if (strcmp(bib->livros[i]->nome, nNomeLivro) == 0)
+			return bib->livros[i];
 	}
 }
 
@@ -204,11 +202,7 @@ void insereLivro(Biblioteca *bib, Livro *l)
 	if (bib->posLivre > (TAM - 1))
 	{
 		OrdenacaoPorSelecaoEmprestimos(bib, TAM);
-		for (int i = TAM - 1; i < 0; i--)
-		{
-			if (bib->livros[i]->emprestado != true)
-				bib->livros[i] = l;
-		}
+		bib->livros[TAM - 1] = l;
 	}
 	else
 	{

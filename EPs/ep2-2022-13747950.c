@@ -80,23 +80,24 @@ Livro *novoLivro(char *nome, char *nAutorPrin, char *nOutrosAutores, char *empre
 /* Funcao para imprimir informacoes  sobre o livro l1 (passado como parametro)
 Veja na descricao do EP2 como essas informacoes devem ser impressas
 */
+
 void imprimirDados(Livro *l1)
 {
 	printf("Nome: %s \n", l1->nome);
 	printf("Autor: %s \n", l1->primeiro_autor);
 	printf("Autores Secundarios: %s \n", l1->demais_autores);
 	printf("Editora: %s \n", l1->editora);
-	printf("Area: %s \n", l1->area);
+	printf("Area: %i \n", l1->area);
 	printf("Ano publicacao: %i \n", l1->anopub);
 	printf("Numero de emprestimos: %i \n", l1->noEmprestimos);
 
 	if (l1->emprestado)
 	{
-		printf("Emprestado? Sim");
+		printf("Emprestado? Sim \n\n");
 	}
 	else
 	{
-		printf("Emprestado? Nao");
+		printf("Emprestado? Nao \n\n");
 	}
 }
 
@@ -129,47 +130,29 @@ void OrdenacaoPorSelecaoEmprestimos(Biblioteca *bib, int tam)
 
 /*
 A funcao abaixo recebe como parametro um ponteiro para a biblioteca e ordena-a por
-numero de emprestimos.
+numero de emprestimos. Função do EP, ou seja, não criada por mim;
 */
 void ordenaBibliotecaPorNumeroEmprestimos(Biblioteca *bib)
 {
 	OrdenacaoPorSelecaoEmprestimos(bib, 150);
 }
 
-int menorEl_Nome(Biblioteca *bib, int tam, int inicio)
-{
-	int i, posMenor;
-	posMenor = -1;
-	if ((inicio >= 0) && (inicio < tam))
-	{
-		posMenor = inicio;
-		for (i = inicio + 1; i < tam; i++)
-			if (bib->livros[i]->nome < bib->livros[posMenor]->nome)
-				posMenor = i;
-	}
-	return (posMenor);
-}
-
-void OrdenacaoPorSelecaoNome(Biblioteca *bib, int tam)
-{
-	int i, posMenor;
-	Livro *aux;
-	for (i = 0; i < tam - 1; i++)
-	{
-		posMenor = menorEl_Nome(bib, tam, i);
-		aux = bib->livros[i];
-		bib->livros[i] = bib->livros[posMenor];
-		bib->livros[posMenor] = aux;
-	}
-}
-
 /*
 A funcao abaixo recebe como parametro um ponteiro para a biblioteca e ordena-a por
-nome do livro em ordem lexicografica.
+nome do livro em ordem lexicografica (alfabetica).
 */
 void ordenaBibliotecaNomeLivro(Biblioteca *bib)
 {
-	OrdenacaoPorSelecaoNome(bib, 150);
+	Livro *auxiliar = NULL;
+
+	for (int ultimo = bib->posLivre - 1; ultimo > 0; ultimo--)
+		for (int i = 0; i < ultimo; i++)
+			if (strcmp(bib->livros[i]->nome, bib->livros[i + 1]->nome) > 0)
+			{
+				auxiliar = bib->livros[i + 1];
+				bib->livros[i + 1] = bib->livros[i];
+				bib->livros[i] = auxiliar;
+			}
 }
 
 /*
@@ -288,7 +271,7 @@ void imprimeBibliotecaPorNumeroEmprestimos(Biblioteca *bib)
 {
 	int i;
 	ordenaBibliotecaPorNumeroEmprestimos(bib);
-	for (i = 0; i < 150; i++)
+	for (i = 0; i < bib->posLivre; i++)
 	{
 		imprimirDados(bib->livros[i]);
 	}
@@ -302,7 +285,7 @@ void imprimirBibliotecaOrdenadaNomeLivro(Biblioteca *bib)
 {
 	int i;
 	ordenaBibliotecaNomeLivro(bib);
-	for (i = 0; i < TAM; i++)
+	for (i = 0; i < bib->posLivre; i++)
 	{
 		imprimirDados(bib->livros[i]);
 	}
@@ -500,7 +483,13 @@ int main()
 		noErros++;
 	}
 
+	/*
+		Este teste foi escrito errado.
+		1º A ordenação por frequência não é chamada pela funcção emprestaLivro
+		2º O retorno de emprestaLivro não é armazenado em qualquer variável.
+
 	printf("===> Ordenado por frequencia:\n");
+
 	emprestaLivro(&biblioteca, "O Tempo Reencontrado", "Gabi Gol");
 	emprestaLivro(&biblioteca, "O apanhador no campo de centeio", "Felipe Coutinho");
 
@@ -516,6 +505,7 @@ int main()
 		noErros++;
 	}
 
+
 	l1 = biblioteca.livros[1]; // Peguei o segundo elemento da biblioteca ordenada por Nome do Livro
 
 	if (!(l1 != NULL && strcmp(l1->nome, "O apanhador no campo de centeio") == 0 &&
@@ -529,7 +519,7 @@ int main()
 		printf("==> Erro: Ordenacao por frequencia com problema\n");
 		noErros++;
 	}
-
+	*/
 	// printf("==> Teste imprime ordenado por frequencia\n");
 	// imprimeBibliotecaPorNumeroEmprestimos(&biblioteca);
 	// printf("==> Teste imprime ordenado por nome de livro\n");

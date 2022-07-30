@@ -108,7 +108,7 @@ int decrescente_NoEmprestimos(Biblioteca *biblioteca, int tam, int inicio)
 	if ((inicio >= 0) && (inicio < tam))
 	{
 		posMenor = inicio;
-		for (i = inicio + 1; i < tam; i++)
+		for (i = inicio + 1; i < biblioteca->posLivre; i++)
 			if (biblioteca->livros[i]->noEmprestimos > biblioteca->livros[posMenor]->noEmprestimos)
 				posMenor = i;
 	}
@@ -484,14 +484,13 @@ int main()
 	}
 
 	/*
-		Este teste foi escrito errado.
+		Este teste abaixo foi escrito errado.
 		1º A ordenação por frequência não é chamada pela funcção emprestaLivro
 		2º O retorno de emprestaLivro não é armazenado em qualquer variável.
+	*/
 
-	printf("===> Ordenado por frequencia:\n");
-
-	emprestaLivro(&biblioteca, "O Tempo Reencontrado", "Gabi Gol");
-	emprestaLivro(&biblioteca, "O apanhador no campo de centeio", "Felipe Coutinho");
+	l1 = emprestaLivro(&biblioteca, "O Tempo Reencontrado", "Gabi Gol");
+	// emprestaLivro(&biblioteca, "O apanhador no campo de centeio", "Felipe Coutinho"); - Sei lá pra que serve isso
 
 	if (!(l1 != NULL && strcmp(l1->nome, "O Tempo Reencontrado") == 0 &&
 		  strcmp(l1->primeiro_autor, "Marcel Proust") == 0 &&
@@ -501,10 +500,13 @@ int main()
 		  l1->anopub == 1993 &&
 		  l1->emprestado == true))
 	{
-		printf("==> Erro: Ordenacao por frequencia com problema\n");
+		printf("==> Erro: Ordenacao por frequencia com problema -- TESTE ESCRITO ERRADO, este teste não é de frequencia, mas de emprestar livro!\n");
 		noErros++;
 	}
 
+	/*
+
+	Teste escrito errado.
 
 	l1 = biblioteca.livros[1]; // Peguei o segundo elemento da biblioteca ordenada por Nome do Livro
 
@@ -516,14 +518,16 @@ int main()
 		  l1->anopub == 1945 &&
 		  l1->emprestado == true))
 	{
-		printf("==> Erro: Ordenacao por frequencia com problema\n");
+		printf("==> Erro: Ordenacao por frequencia com problema -- TESTE ESCRITO ERRADO, este teste não é de frequencia, mas de emprestar livro!\n");
 		noErros++;
 	}
 	*/
-	// printf("==> Teste imprime ordenado por frequencia\n");
-	// imprimeBibliotecaPorNumeroEmprestimos(&biblioteca);
-	// printf("==> Teste imprime ordenado por nome de livro\n");
-	// imprimirBibliotecaOrdenadaNomeLivro(&biblioteca);
+
+	printf("==> Teste imprime ordenado por frequencia\n");
+	imprimeBibliotecaPorNumeroEmprestimos(&biblioteca);
+
+	printf("==> Teste imprime ordenado por nome de livro\n");
+	imprimirBibliotecaOrdenadaNomeLivro(&biblioteca);
 
 	printf("==> Teste da biblioteca lotada\n");
 	int espacolivre = TAM - tamanho(&biblioteca); // Espaço livre na biblioteca nesse momento.

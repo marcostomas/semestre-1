@@ -80,7 +80,6 @@ Livro *novoLivro(char *nome, char *nAutorPrin, char *nOutrosAutores, char *empre
 /* Funcao para imprimir informacoes  sobre o livro l1 (passado como parametro)
 Veja na descricao do EP2 como essas informacoes devem ser impressas
 */
-
 void imprimirDados(Livro *l1)
 {
 	printf("Nome: %s \n", l1->nome);
@@ -165,9 +164,6 @@ Livro *buscaLivro(Biblioteca *bib, char *nNomeLivro)
 	{
 		if (i >= bib->posLivre)
 			return NULL;
-
-		printf("Nome do Livro - Biblioteca: %s\n", bib->livros[i]->nome);
-		printf("Nome do Livro - Buscado: %s\n\n", nNomeLivro);
 
 		if (strcmp(bib->livros[i]->nome, nNomeLivro) == 0)
 			return bib->livros[i];

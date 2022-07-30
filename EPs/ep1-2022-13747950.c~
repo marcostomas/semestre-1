@@ -48,6 +48,7 @@ void separaNumero(int valor)
 		centenas = (valor / 100) % 10;
 		milhares = (valor / 1000) % 10;
 
+		printf("milhar: %i, centena: %i, dezena: %i, unidade: %i \n\n", milhares, centenas, dezenas, unidades);
 	}
 	else
 	{
@@ -56,6 +57,7 @@ void separaNumero(int valor)
 		centenas = -1;
 		milhares = -1;
 
+		printf("milhar: %i, centena: %i, dezena: %i, unidade: %i \n\n", milhares, centenas, dezenas, unidades);
 	}
 }
 

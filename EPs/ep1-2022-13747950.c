@@ -91,7 +91,7 @@ int ultrapassagem(int popA, double taxaA, int popB, double taxaB)
 			popB = popB * (1 + taxaB/100);
 			anos++;
 
-			if (anos > 32000)
+			if (anos > 1000000)
 			{
 				printf("Nao ultrapassou \n\n");
 				return -1;

@@ -48,7 +48,6 @@ void separaNumero(int valor)
 		centenas = (valor / 100) % 10;
 		milhares = (valor / 1000) % 10;
 
-		printf("milhar: %i, centena: %i, dezena: %i, unidade: %i \n\n", milhares, centenas, dezenas, unidades);
 	}
 	else
 	{
@@ -57,7 +56,6 @@ void separaNumero(int valor)
 		centenas = -1;
 		milhares = -1;
 
-		printf("milhar: %i, centena: %i, dezena: %i, unidade: %i \n\n", milhares, centenas, dezenas, unidades);
 	}
 }
 
@@ -89,11 +87,11 @@ int ultrapassagem(int popA, double taxaA, int popB, double taxaB)
 	{
 		while (popA != popB)
 		{
-			popA = popA * taxaA;
-			popB = popB * taxaB;
+			popA = popA * (1 + taxaA/100);
+			popB = popB * (1 + taxaB/100);
 			anos++;
 
-			if (anos > 32000)
+			if (anos > 1000000)
 			{
 				printf("Nao ultrapassou \n\n");
 				return -1;
